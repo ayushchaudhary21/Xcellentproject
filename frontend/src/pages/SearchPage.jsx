@@ -83,8 +83,8 @@ export default function SearchPage() {
                   Total Commits
                 </p>
                 <p className="text-4xl font-bold">
-                  {Math.floor(Math.random() * 5000) + 1000}  
-                   {/*total overall commits will come over here .  */}
+                  {Math.floor(Math.random() * 5000) + 1000}
+                  {/*total overall commits will come over here .  */}
                 </p>
               </div>
             </div>
@@ -117,7 +117,7 @@ export default function SearchPage() {
       {/* Repo List */}
       {searched && repos.length > 0 && !loading && (
         <div className="animate-fade-in" style={{ animationDelay: "0.3s" }}>
-          <RepoList repos={repos} />
+          <RepoList repos={repos} username={username} />
         </div>
       )}
 

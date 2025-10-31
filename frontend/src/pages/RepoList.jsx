@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-export default function RepoList({ repos }) {
+export default function RepoList({ repos, username }) {
   // Mock language distribution data
   const languageData = [
     {
@@ -127,7 +127,7 @@ export default function RepoList({ repos }) {
           {repos.map((repo, index) => (
             <div
               key={repo}
-              onClick={() => navigate(`/repo/${username}/${repo}`)}
+              onClick={() => navigate(`/repos/${username}/${repo}`)}
               className="bg-white rounded-xl border-2 border-blue-100 p-6 shadow-sm hover:shadow-lg hover:border-blue-300 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 cursor-pointer group"
               style={{
                 animation: `fadeInUp 0.5s ease-out ${index * 0.05}s both`,

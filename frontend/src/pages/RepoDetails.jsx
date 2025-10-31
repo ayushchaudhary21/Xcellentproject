@@ -1,28 +1,33 @@
-import { useParams, useRouter } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 export default function RepoDetailsPage() {
   const params = useParams();
-  const router = useRouter();
-  const { username, reponame } = params;
+  const navigate = useNavigate();
+  const { username, repoName } = params;
   const [repoDetails, setRepoDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  // get the params from the url
+  console.log("username is : ", username);
+  console.log("reponame is : ", repoName);
 
   useEffect(() => {
     const fetchRepoDetails = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8080/api/${username}/${reponame}`
+          `http://localhost:8080/api/${username}/${repoName}`
         );
 
         if (!response.ok) {
           throw new Error("Failed to fetch repo details");
         }
-
+        console.log("response received for repo details", response);
         const data = await response.json();
         setRepoDetails(data);
       } catch (err) {
+        ``;
         setError("Failed to load repository details");
       } finally {
         setLoading(false);
@@ -30,7 +35,7 @@ export default function RepoDetailsPage() {
     };
 
     fetchRepoDetails();
-  }, [username, reponame]);
+  });
 
   if (loading) {
     return (
