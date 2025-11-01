@@ -18,7 +18,8 @@ export default function RepoList({ repos, username }) {
   ].filter((item) => item.value > 0);
 
   // get the data over here the total data present here.
-
+  console.log("username : ", username);
+  console.log("repos : ", repos);
   // Calculate pie chart segments
   const total = languageData.reduce((sum, item) => sum + item.value, 0);
   let currentAngle = 0;
@@ -126,8 +127,8 @@ export default function RepoList({ repos, username }) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {repos.map((repo, index) => (
             <div
-              key={repo}
-              onClick={() => navigate(`/repos/${username}/${repo}`)}
+              key={index}
+              onClick={() => navigate(`/repos/${username}/${repo.name}`)}
               className="bg-white rounded-xl border-2 border-blue-100 p-6 shadow-sm hover:shadow-lg hover:border-blue-300 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 cursor-pointer group"
               style={{
                 animation: `fadeInUp 0.5s ease-out ${index * 0.05}s both`,
@@ -135,21 +136,19 @@ export default function RepoList({ repos, username }) {
             >
               {/* Repo Name */}
               <h3 className="text-lg font-bold text-gray-800 mb-4 group-hover:text-blue-600 transition-colors duration-300 truncate">
-                {repo}
+                {repo.name}
               </h3>
 
               {/* Stats */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors duration-300">
                   <span className="text-gray-600 font-medium">⭐ Stars</span>
-                  <span className="text-blue-600 font-bold">
-                    {Math.floor(Math.random() * 500) + 10}
-                  </span>
+                  <span className="text-blue-600 font-bold">{repo.stars}</span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-indigo-50 rounded-lg group-hover:bg-indigo-100 transition-colors duration-300">
-                  <span className="text-gray-600 font-medium">📝 Commits</span>
+                  <span className="text-gray-600 font-medium">📝 forks</span>
                   <span className="text-indigo-600 font-bold">
-                    {Math.floor(Math.random() * 1000) + 50}
+                    {repo.forks || 0}
                   </span>
                 </div>
               </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import RepoList from "./RepoList";
 
@@ -8,6 +8,19 @@ export default function SearchPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [searched, setSearched] = useState(false);
+
+  useEffect(() => {
+    const savedUsername = localStorage.getItem("githubUsername");
+    if (savedUsername) {
+      setUsername(savedUsername);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (username.trim()) {
+      localStorage.setItem("githubUsername", username);
+    }
+  }, [username]);
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -80,10 +93,10 @@ export default function SearchPage() {
               </div>
               <div className="transform transition-transform duration-300 hover:scale-105">
                 <p className="text-blue-100 text-sm font-medium mb-2">
-                  Total Commits
+                  Total Stars
                 </p>
                 <p className="text-4xl font-bold">
-                  {Math.floor(Math.random() * 5000) + 1000}
+                  {repos.reduce((sum, repo) => sum + repo.stars, 0)}
                   {/*total overall commits will come over here .  */}
                 </p>
               </div>
