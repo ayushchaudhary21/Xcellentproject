@@ -1,5 +1,6 @@
 package in.XcellentTut.github.controller;
 import in.XcellentTut.github.dto.GitHubMapped;
+import in.XcellentTut.github.dto.RepoList;
 import in.XcellentTut.github.service.GitHubService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class GitController {
 
 
     @GetMapping("{username}")
-    public ResponseEntity<List<String>> getRepo(@PathVariable("username") String  username)
+    public ResponseEntity<List<RepoList>>getRepo(@PathVariable("username") String  username)
     {
         return new ResponseEntity<>(gitHubService.getAllRepo(username), HttpStatus.OK);
     }
