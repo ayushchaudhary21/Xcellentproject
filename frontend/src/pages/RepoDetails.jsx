@@ -1,7 +1,10 @@
+"use client";
+
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import axios from "axios";
 
-export default function RepoDetailsPage() {
+export default function Page() {
   const params = useParams();
   const navigate = useNavigate();
   const { username, repoName } = params;
@@ -9,59 +12,209 @@ export default function RepoDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // get the params from the url
-  console.log("username is : ", username);
-  console.log("reponame is : ", repoName);
-
   useEffect(() => {
     const fetchRepoDetails = async () => {
       try {
-        const response = await fetch(
+        const response = await axios.get(
           `http://localhost:8080/api/${username}/${repoName}`
         );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch repo details");
-        }
-        console.log("response received for repo details", response);
-        const data = await response.json();
-        setRepoDetails(data);
+        setRepoDetails(response.data);
+        setLoading(false);
       } catch (err) {
-        ``;
+        console.log("Error occurred:", err);
         setError("Failed to load repository details");
-      } finally {
         setLoading(false);
       }
     };
 
     fetchRepoDetails();
-  });
+  }, [username, repoName]);
+
+  const styles = {
+    container: {
+      minHeight: "100vh",
+      backgroundColor: "#f8f9fa",
+      padding: "2rem",
+      fontFamily: "Arial, sans-serif",
+    },
+    maxWidth: {
+      maxWidth: "800px",
+      margin: "0 auto",
+    },
+    backButton: {
+      marginBottom: "2rem",
+      padding: "0.75rem 1.5rem",
+      backgroundColor: "#007bff",
+      color: "white",
+      border: "none",
+      borderRadius: "8px",
+      cursor: "pointer",
+      fontSize: "1rem",
+      fontWeight: "500",
+      transition: "background-color 0.3s",
+    },
+    header: {
+      backgroundColor: "white",
+      padding: "2rem",
+      borderRadius: "8px",
+      marginBottom: "2rem",
+      boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+    },
+    title: {
+      fontSize: "2.5rem",
+      fontWeight: "bold",
+      color: "#333",
+      margin: "0 0 0.5rem 0",
+    },
+    subtitle: {
+      fontSize: "1.1rem",
+      color: "#666",
+      margin: "0 0 1rem 0",
+    },
+    description: {
+      fontSize: "1rem",
+      color: "#555",
+      lineHeight: "1.6",
+      margin: 0,
+    },
+    statsGrid: {
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+      gap: "1rem",
+      marginBottom: "2rem",
+    },
+    statCard: {
+      backgroundColor: "white",
+      padding: "1.5rem",
+      borderRadius: "8px",
+      textAlign: "center",
+      boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+      transition: "transform 0.2s",
+    },
+    statLabel: {
+      fontSize: "0.85rem",
+      color: "#666",
+      marginBottom: "0.5rem",
+      textTransform: "uppercase",
+      fontWeight: "600",
+    },
+    statValue: {
+      fontSize: "2rem",
+      fontWeight: "bold",
+      color: "#007bff",
+    },
+    detailsSection: {
+      backgroundColor: "white",
+      padding: "2rem",
+      borderRadius: "8px",
+      boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+    },
+    detailsTitle: {
+      fontSize: "1.5rem",
+      fontWeight: "bold",
+      color: "#333",
+      marginBottom: "1.5rem",
+      margin: 0,
+    },
+    detailRow: {
+      display: "flex",
+      justifyContent: "space-between",
+      padding: "1rem",
+      borderBottom: "1px solid #eee",
+    },
+    detailLabel: {
+      fontWeight: "600",
+      color: "#333",
+    },
+    detailValue: {
+      color: "#666",
+      textAlign: "right",
+    },
+    ownerCard: {
+      display: "flex",
+      alignItems: "center",
+      gap: "1rem",
+      padding: "1rem",
+      backgroundColor: "#f8f9fa",
+      borderRadius: "6px",
+    },
+    ownerAvatar: {
+      width: "50px",
+      height: "50px",
+      borderRadius: "50%",
+      border: "2px solid #007bff",
+    },
+    ownerInfo: {
+      flex: 1,
+    },
+    ownerName: {
+      fontWeight: "bold",
+      color: "#333",
+      margin: 0,
+    },
+    ownerLink: {
+      color: "#007bff",
+      textDecoration: "none",
+      fontSize: "0.9rem",
+      margin: 0,
+    },
+    loadingContainer: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      minHeight: "100vh",
+      backgroundColor: "#f8f9fa",
+    },
+    spinner: {
+      width: "40px",
+      height: "40px",
+      border: "4px solid #e9ecef",
+      borderTop: "4px solid #007bff",
+      borderRadius: "50%",
+      animation: "spin 1s linear infinite",
+      marginBottom: "1rem",
+    },
+    errorContainer: {
+      backgroundColor: "#f8d7da",
+      border: "1px solid #f5c6cb",
+      color: "#721c24",
+      padding: "1.5rem",
+      borderRadius: "8px",
+      marginTop: "2rem",
+    },
+  };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center">
-        <div className="text-center animate-fade-in">
-          <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600 font-medium">
-            Loading repository details...
-          </p>
-        </div>
+      <div style={styles.loadingContainer}>
+        <style>{`
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+        `}</style>
+        <div style={styles.spinner}></div>
+        <p style={{ color: "#666", fontSize: "1rem" }}>
+          Loading repository details...
+        </p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-12 px-4">
-        <div className="max-w-2xl mx-auto">
+      <div style={styles.container}>
+        <div style={styles.maxWidth}>
           <button
-            onClick={() => router.back()}
-            className="mb-6 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-300 transform hover:scale-105"
+            onClick={() => navigate(-1)}
+            style={styles.backButton}
+            onMouseOver={(e) => (e.target.style.backgroundColor = "#0056b3")}
+            onMouseOut={(e) => (e.target.style.backgroundColor = "#007bff")}
           >
             ← Back
           </button>
-          <div className="bg-red-50 border-2 border-red-200 text-red-700 px-6 py-4 rounded-xl animate-fade-in">
-            <p className="font-semibold">Error</p>
+          <div style={styles.errorContainer}>
+            <strong>Error</strong>
             <p>{error}</p>
           </div>
         </div>
@@ -70,123 +223,107 @@ export default function RepoDetailsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-12 px-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Back Button */}
+    <div style={styles.container}>
+      <style>{`
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+        button:hover {
+          background-color: #0056b3;
+        }
+        .stat-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+      `}</style>
+
+      <div style={styles.maxWidth}>
         <button
-          onClick={() => router.back()}
-          className="mb-8 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all duration-300 transform hover:scale-105 active:scale-95 animate-fade-in"
+          onClick={() => navigate(-1)}
+          style={styles.backButton}
+          onMouseOver={(e) => (e.target.style.backgroundColor = "#0056b3")}
+          onMouseOut={(e) => (e.target.style.backgroundColor = "#007bff")}
         >
           ← Back
         </button>
 
-        {/* Header Section */}
-        <div
-          className="bg-white rounded-xl shadow-md p-8 border border-blue-100 mb-8 animate-fade-in"
-          style={{ animationDelay: "0.1s" }}
-        >
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">{reponame}</h1>
-          <p className="text-gray-600 text-lg mb-4">
-            by <span className="font-semibold text-blue-600">{username}</span>
+        <div style={styles.header}>
+          <h1 style={styles.title}>{repoDetails?.name || "Project"}</h1>
+          <p style={styles.subtitle}>
+            by <strong>{repoDetails?.owner?.login || "Unknown"}</strong>
           </p>
-          <p className="text-gray-700 leading-relaxed">
+          <p style={styles.description}>
             {repoDetails?.description || "No description available"}
           </p>
         </div>
 
-        {/* Stats Grid */}
-        <div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 animate-fade-in"
-          style={{ animationDelay: "0.2s" }}
-        >
-          {[
-            { label: "Stars", value: repoDetails?.stars || 0, color: "blue" },
-            { label: "Forks", value: repoDetails?.forks || 0, color: "indigo" },
-            {
-              label: "Watchers",
-              value: repoDetails?.watchers || 0,
-              color: "purple",
-            },
-            {
-              label: "Open Issues",
-              value: repoDetails?.openIssues || 0,
-              color: "pink",
-            },
-          ].map((stat, index) => (
-            <div
-              key={stat.label}
-              className={`bg-${stat.color}-50 border-2 border-${stat.color}-100 rounded-xl p-6 hover:shadow-lg transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 group`}
-              style={{
-                animation: `fadeInUp 0.5s ease-out ${index * 0.1}s both`,
-              }}
-            >
-              <p className={`text-${stat.color}-600 font-medium text-sm mb-2`}>
-                {stat.label}
-              </p>
-              <p
-                className={`text-3xl font-bold text-${stat.color}-700 group-hover:text-${stat.color}-800 transition-colors duration-300`}
-              >
-                {stat.value}
-              </p>
+        <div style={styles.statsGrid}>
+          <div style={styles.statCard} className="stat-card">
+            <div style={styles.statLabel}>Stars</div>
+            <div style={styles.statValue}>
+              {repoDetails?.stargazers_count || 0}
             </div>
-          ))}
-        </div>
-
-        {/* Details Section */}
-        <div
-          className="bg-white rounded-xl shadow-md p-8 border border-blue-100 animate-fade-in"
-          style={{ animationDelay: "0.3s" }}
-        >
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">
-            Repository Information
-          </h2>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors duration-300">
-              <span className="text-gray-700 font-medium">Language</span>
-              <span className="text-blue-600 font-bold">
-                {repoDetails?.language || "Not specified"}
-              </span>
-            </div>
-            <div className="flex items-center justify-between p-4 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors duration-300">
-              <span className="text-gray-700 font-medium">Created</span>
-              <span className="text-indigo-600 font-bold">
-                {repoDetails?.createdAt || "N/A"}
-              </span>
-            </div>
-            <div className="flex items-center justify-between p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors duration-300">
-              <span className="text-gray-700 font-medium">Last Updated</span>
-              <span className="text-purple-600 font-bold">
-                {repoDetails?.updatedAt || "N/A"}
-              </span>
-            </div>
-            <div className="flex items-center justify-between p-4 bg-pink-50 rounded-lg hover:bg-pink-100 transition-colors duration-300">
-              <span className="text-gray-700 font-medium">URL</span>
-              <a
-                href={repoDetails?.url || "#"}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-pink-600 font-bold hover:text-pink-700 transition-colors duration-300 truncate"
-              >
-                View on GitHub
-              </a>
+          </div>
+          <div style={styles.statCard} className="stat-card">
+            <div style={styles.statLabel}>Forks</div>
+            <div style={styles.statValue}>{repoDetails?.forks_count || 0}</div>
+          </div>
+          <div style={styles.statCard} className="stat-card">
+            <div style={styles.statLabel}>Watchers</div>
+            <div style={styles.statValue}>
+              {repoDetails?.watchers_count || 0}
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Custom Animations */}
-      <style jsx>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
+        <div style={styles.detailsSection}>
+          <h2 style={styles.detailsTitle}>Project Information</h2>
+
+          <div style={styles.detailRow}>
+            <span style={styles.detailLabel}>Owner</span>
+            <div style={styles.ownerCard}>
+              {repoDetails?.owner?.avatar_url && (
+                <img
+                  src={repoDetails?.owner?.avatar_url || "/placeholder.svg"}
+                  alt="Owner Avatar"
+                  style={styles.ownerAvatar}
+                />
+              )}
+              <div style={styles.ownerInfo}>
+                <p style={styles.ownerName}>
+                  {repoDetails?.owner?.login || "N/A"}
+                </p>
+                {repoDetails?.owner?.html_url && (
+                  <a
+                    href={repoDetails?.owner?.html_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={styles.ownerLink}
+                  >
+                    View Profile →
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div style={styles.detailRow}>
+            <span style={styles.detailLabel}>Language</span>
+            <span style={styles.detailValue}>
+              {repoDetails?.language || "Not specified"}
+            </span>
+          </div>
+
+          <div style={styles.detailRow}>
+            <span style={styles.detailLabel}>Last Updated</span>
+            <span style={styles.detailValue}>
+              {repoDetails?.updated_at
+                ? new Date(repoDetails?.updated_at).toLocaleDateString()
+                : "N/A"}
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -11,9 +11,6 @@ import RepoDetails from "./pages/RepoDetails";
 function App() {
   return (
     <>
-      <div className="font-bold text-xl text-center">
-        This is a react app with the react router + tailwind CSS .{" "}
-      </div>
       <Routes>
         {/* Landing page */}
         <Route path="/" element={<Landing />} />
